@@ -22,7 +22,7 @@
 <body>
 
 	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-		<a class="navbar-brand" href="#">Demo App</a>
+		<a class="navbar-brand" href="#">Spring MVC 4 Demo App</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarsExampleDefault"
 			aria-controls="navbarsExampleDefault" aria-expanded="false"
@@ -46,7 +46,7 @@
 	<main role="main" class="container">
 
 	<div class="starter-template">
-		<h1>Demo Web App</h1>
+		<h1>Spring Demo Web App</h1>
 		<p class="lead">Welcome to Demo App</p>
 		<h4>${hostname}</h4>
 	</div>
