@@ -35,11 +35,11 @@
 				<li class="nav-item active"><a class="nav-link disabled"
 					href="#">Home</a></li>
 			</ul>
-			<form class="form-inline my-2 my-lg-0">
+<!-- 			<form class="form-inline my-2 my-lg-0">
 				<input class="form-control mr-sm-2" type="text" placeholder="Search"
 					aria-label="Search">
 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-			</form>
+			</form> -->
 		</div>
 	</nav>
 
@@ -47,11 +47,22 @@
 
 	<div class="starter-template">
 		<h1>Spring Demo Web App</h1>
-		<p class="lead">Welcome to Demo App</p>
 		<h4>${hostname}</h4>
 	</div>
-
-	</main>
+	<c:choose>
+		<c:when test="${not empty db_exception}">
+			<div class="alert alert-danger">
+				<strong>DB not configured </strong>
+				<br>
+				<strong>Error :</strong>${db_exception}
+			</div>
+		</c:when>
+		<c:otherwise>
+			<div class="alert alert-info">
+				<strong>DB info :</strong>${db_url}
+			</div>
+		</c:otherwise>
+	</c:choose> </main>
 	<!-- /.container -->
 
 	<!-- Bootstrap core JavaScript
