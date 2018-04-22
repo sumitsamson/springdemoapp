@@ -48,6 +48,7 @@ public class MainController {
 		
 		
 		try {
+			logger.info("db_host from env :: "+System.getenv("db_host"));
 			metadata = datasource.getConnection().getMetaData();
 			url = metadata.getURL();
 			
