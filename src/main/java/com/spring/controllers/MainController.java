@@ -49,13 +49,14 @@ public class MainController {
 		
 		try {
 			logger.info("db_host from env :: "+System.getenv("db_host"));
+			logger.info("db_url from env :: "+System.getenv("db_url"));
 			metadata = datasource.getConnection().getMetaData();
 			url = metadata.getURL();
 			
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(""+e);
             exception = e.getMessage();			
 		}		
 		
