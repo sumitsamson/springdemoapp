@@ -1,5 +1,6 @@
 package com.spring.controllers;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.DatabaseMetaData;
@@ -41,32 +42,32 @@ public class MainController {
 
 	@RequestMapping(value = REQ_HOME_PAGE, method = RequestMethod.GET)
 	public String viewHome(ModelMap model) {
-		
+
 		DatabaseMetaData metadata;
 		String url = "";
 		String exception = "";
-		
-		
+		String db_host = "";
+
 		try {
-			logger.info("db_host from env :: "+System.getenv("db_host"));
-			logger.info("db_url from env :: "+System.getenv("db_url"));
+			db_host =  System.getenv("db_host");
+			logger.info("db_host from env :: " + db_host);	
+			
+			isHostReachable(db_host);
+
 			metadata = datasource.getConnection().getMetaData();
 			url = metadata.getURL();
-			
-			
+
 		} catch (Exception e) {
-			
-			logger.error(""+e);
-            exception = e.getMessage();			
-		}		
-		
-		model.addAttribute("db_url",url);		
-		model.addAttribute("db_exception", exception);		
+
+			logger.error("" + e);
+			exception = e.getMessage();
+		}
+
+		model.addAttribute("db_url", url);
+		model.addAttribute("db_exception", exception);
 		model.addAttribute("message", "");
 		model.addAttribute("hostname", getHostname());
-		
-		
-		
+
 		logger.info("At home ");
 
 		return HOME_PAGE;
@@ -97,7 +98,7 @@ public class MainController {
 		String hostname = "";
 		try {
 			ip = InetAddress.getLocalHost();
-			hostname =  ip.toString();
+			hostname = ip.toString();
 			logger.info(hostname);
 
 		} catch (UnknownHostException e) {
@@ -106,6 +107,15 @@ public class MainController {
 		}
 
 		return hostname;
+	}
+
+	private void isHostReachable(String ipAddress) throws UnknownHostException, IOException {
+		InetAddress geek = InetAddress.getByName(ipAddress);
+		logger.info("Sending Ping Request to " + ipAddress);
+		if (geek.isReachable(5000))
+			logger.info("Host is reachable");
+		else
+			logger.error("Sorry ! We can't reach to this host");
 	}
 
 }
