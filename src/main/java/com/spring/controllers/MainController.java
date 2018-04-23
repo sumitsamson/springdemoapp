@@ -97,7 +97,7 @@ public class MainController {
 		String hostname = "";
 		try {
 			ip = InetAddress.getLocalHost();
-			hostname = String.format("Current host details :[%s]", ip);
+			hostname =  ip.toString();
 			logger.info(hostname);
 
 		} catch (UnknownHostException e) {

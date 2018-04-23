@@ -47,7 +47,7 @@
 
 	<div class="starter-template">
 		<h1>Spring Demo Web App</h1>
-		<h4>${hostname}</h4>
+		<h4>Host Details : <button type="button" class="btn btn-info">${hostname}</button></h4>
 	</div>
 	<c:choose>
 		<c:when test="${not empty db_exception}">
