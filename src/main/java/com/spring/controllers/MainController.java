@@ -17,6 +17,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -49,9 +50,9 @@ public class MainController {
 		String db_host = "";
 
 		try {
-			db_host =  System.getenv("db_host");
-			logger.info("db_host from env :: " + db_host);	
-			
+			db_host = System.getenv("db_host");
+			logger.info("db_host from env :: " + db_host);
+
 			isHostReachable(db_host);
 
 			metadata = datasource.getConnection().getMetaData();
@@ -71,6 +72,14 @@ public class MainController {
 		logger.info("At home ");
 
 		return HOME_PAGE;
+	}
+
+	@RequestMapping(value = "/ping", method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody String pingHostname(
+			@RequestParam(value = "hostname", required = true) String hostname)
+			throws UnknownHostException, IOException {
+
+		return isHostReachable(hostname) ? "Success" : "Not Reachable";
 	}
 
 	@ExceptionHandler(value = Exception.class)
@@ -109,13 +118,30 @@ public class MainController {
 		return hostname;
 	}
 
-	private void isHostReachable(String ipAddress) throws UnknownHostException, IOException {
-		InetAddress geek = InetAddress.getByName(ipAddress);
-		logger.info("Sending Ping Request to " + ipAddress);
-		if (geek.isReachable(5000))
-			logger.info("Host is reachable");
-		else
-			logger.error("Sorry ! We can't reach to this host");
+	private boolean isHostReachable(String ipAddress) {
+		boolean reachable = false;
+		if (ipAddress != null && !ipAddress.isEmpty()) {
+			logger.info("Sending Ping Request to " + ipAddress);
+			InetAddress geek;
+			try {
+				geek = InetAddress.getByName(ipAddress);
+				if (geek.isReachable(5000)) {
+					logger.info("Host :" + ipAddress + " is reachable");
+					reachable = true;
+				}
+			} catch (UnknownHostException e) {
+				
+				e.printStackTrace();
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+			}			
+
+		}
+
+		return reachable;
 	}
+	
+	
 
 }
