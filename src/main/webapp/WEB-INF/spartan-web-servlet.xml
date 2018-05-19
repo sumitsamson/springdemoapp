@@ -36,9 +36,9 @@
 	<bean id="datasource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://${db_host}:${db_port}/${db_name}" />
-		<property name="username" value="${db_username}" />
-		<property name="password" value="${db_password}" />
+		<property name="url" value="jdbc:mysql://${DATABASE_SERVICE_NAME}/${DATABASE_NAME}" />
+		<property name="username" value="${DATABASE_USER}" />
+		<property name="password" value="${DATABASE_PASSWORD}" />
 	</bean>
 
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">

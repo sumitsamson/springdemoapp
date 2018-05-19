@@ -47,13 +47,13 @@ public class MainController {
 		DatabaseMetaData metadata;
 		String url = "";
 		String exception = "";
-		String db_host = "";
+		String database_service_name = "";
 
 		try {
-			db_host = System.getenv("db_host");
-			logger.info("db_host from env :: " + db_host);
+			database_service_name = System.getenv("DATABASE_SERVICE_NAME");
+			logger.info("Database service :: " + database_service_name);
 
-			isHostReachable(db_host);
+			isHostReachable(database_service_name);
 
 			metadata = datasource.getConnection().getMetaData();
 			url = metadata.getURL();
