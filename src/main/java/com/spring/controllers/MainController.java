@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -50,12 +51,18 @@ public class MainController {
 		String exception = "";
 		String database_service_name = "";
 
-		try {
+		try {	
+			
+			
 			database_service_name = System.getenv("DATABASE_SERVICE_NAME");
 			logger.info("Database service :: " + database_service_name);
 
-			isHostReachable(database_service_name);
-
+			isHostReachable(database_service_name);		
+			
+			DriverManagerDataSource datasource1 = (DriverManagerDataSource) ContextProvider.getBean("datasource");
+			logger.info("Initialized bean url :"+datasource1.getUrl());
+			logger.info("Initialized bean username :"+datasource1.getUsername());
+			
 			metadata = datasource.getConnection().getMetaData();
 			url = metadata.getURL();
 
@@ -128,6 +135,8 @@ public class MainController {
 				if (geek.isReachable(5000)) {
 					logger.info("Host :" + ipAddress + " is reachable");
 					reachable = true;
+				}else{
+					logger.error("Host :" + ipAddress + " not reachable");
 				}
 			} catch (IOException e) {
 
