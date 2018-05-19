@@ -31,6 +31,7 @@ public class MainController {
 	private final static String HOME_PAGE = "homepage";
 	private final static String REQ_HOME_PAGE = "/" + HOME_PAGE;
 	private final static String REDIRECT_HOME_PAGE = "redirect:" + REQ_HOME_PAGE;
+	private static int counter = 0;
 
 	@Autowired
 	DataSource datasource;
@@ -60,7 +61,7 @@ public class MainController {
 
 		} catch (Exception e) {
 
-			logger.error("" + e);
+			logger.error("ERROR occured :" + e);
 			exception = e.getMessage();
 		}
 
@@ -69,14 +70,13 @@ public class MainController {
 		model.addAttribute("message", "");
 		model.addAttribute("hostname", getHostname());
 
-		logger.info("At home ");
+		logger.info(String.format("At home [%d]", ++counter));
 
 		return HOME_PAGE;
 	}
 
 	@RequestMapping(value = "/ping", method = RequestMethod.POST, produces = { "application/json" })
-	public @ResponseBody String pingHostname(
-			@RequestParam(value = "hostname", required = true) String hostname)
+	public @ResponseBody String pingHostname(@RequestParam(value = "hostname", required = true) String hostname)
 			throws UnknownHostException, IOException {
 
 		return isHostReachable(hostname) ? "Success" : "Not Reachable";
@@ -108,11 +108,11 @@ public class MainController {
 		try {
 			ip = InetAddress.getLocalHost();
 			hostname = ip.toString();
-			logger.info(hostname);
+			logger.info("HOSTNAME :"+hostname);
 
 		} catch (UnknownHostException e) {
 
-			e.printStackTrace();
+			logger.error("ERROR while getting hostname:: ", e);
 		}
 
 		return hostname;
@@ -129,19 +129,14 @@ public class MainController {
 					logger.info("Host :" + ipAddress + " is reachable");
 					reachable = true;
 				}
-			} catch (UnknownHostException e) {
-				
-				e.printStackTrace();
 			} catch (IOException e) {
-				
-				e.printStackTrace();
-			}			
+
+				logger.error("ERROR while checking is host reachable:: ", e);
+			}
 
 		}
 
 		return reachable;
 	}
-	
-	
 
 }
