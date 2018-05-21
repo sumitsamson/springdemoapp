@@ -38,9 +38,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			
 			
 			StringBuffer records = new StringBuffer();
-			records.append("INSERT INTO employee (empName, designation) VALUES ('Jones','Developer')");
-			records.append("INSERT INTO employee (empName, designation) VALUES ('Dean','Tester')");
-			records.append("INSERT INTO employee (empName, designation) VALUES ('Sam','Lead')");
+			records.append("INSERT INTO employee (empName, designation) VALUES ");
+			records.append("('Jones','Developer'), ('Dean','Tester'),('Sam','Lead')");
+			
 			
 			jdbcTemplate.execute(createTable.toString());
 			jdbcTemplate.execute(records.toString());
