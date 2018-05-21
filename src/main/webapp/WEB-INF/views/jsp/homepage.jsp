@@ -102,7 +102,7 @@
 					<td>${employee.empId}</td>
 					<td>${employee.empName}</td>
 					<td>${employee.designation}</td>
-					<td><a href="deleteEmployee/${Employee.empId}">Delete</a></td>
+					<td><a href="deleteEmployee/${employee.empId}">Delete</a></td>
 
 				</tr>
 			</c:forEach>
