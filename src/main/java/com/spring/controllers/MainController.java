@@ -123,7 +123,7 @@ public class MainController {
 	}
 	
 	
-	@RequestMapping(value = "/deleteEmployee/{empid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/deleteEmployee/{empId}", method = RequestMethod.GET)
 	public String deleteEmployee(@PathVariable int empId) {
 		logger.info("******* Delete called ********** ");
 	    employeeService.delete(empId);
