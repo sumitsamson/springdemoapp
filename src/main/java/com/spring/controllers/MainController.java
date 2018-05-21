@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -114,7 +115,7 @@ public class MainController {
 	
 	
 	@RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
-	public String saveContact(@ModelAttribute Employee employee) {
+	public String saveUpdateEmployee(@ModelAttribute Employee employee) {
 		logger.info("******* Save or Update called ********** ");
 		logger.info(String.format("Employee : %s ,Designation: %s", employee.getEmpName(),employee.getDesignation()));
 		employeeService.saveOrUpdate(employee);
@@ -122,13 +123,14 @@ public class MainController {
 	}
 	
 	
-	@RequestMapping(value = "/deleteEmployee", method = RequestMethod.GET)
-	public String deleteContact(HttpServletRequest request) {
+	@RequestMapping(value = "/deleteEmployee/{empid}", method = RequestMethod.GET)
+	public String deleteEmployee(@PathVariable int empId) {
 		logger.info("******* Delete called ********** ");
-	    int contactId = Integer.parseInt(request.getParameter("id"));
-	    employeeService.delete(contactId);
+	    employeeService.delete(empId);
 	    return REDIRECT_HOME_PAGE;
 	}
+	
+
 	
 
 	@RequestMapping(value = "/ping", method = RequestMethod.POST, produces = { "application/json" })

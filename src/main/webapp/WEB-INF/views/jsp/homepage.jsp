@@ -102,9 +102,7 @@
 					<td>${employee.empId}</td>
 					<td>${employee.empName}</td>
 					<td>${employee.designation}</td>
-					<td><a href="saveOrUpdate?id=${Employee.empId}">Edit</a>
-						&nbsp;&nbsp;&nbsp;&nbsp; <a
-						href="deleteEmployee?id=${Employee.empId}">Delete</a></td>
+					<td><a href="deleteEmployee/${Employee.empId}">Delete</a></td>
 
 				</tr>
 			</c:forEach>
