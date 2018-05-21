@@ -59,9 +59,14 @@ public class MainController {
 
 			isHostReachable(database_service_name);		
 			
-			DriverManagerDataSource datasource1 = (DriverManagerDataSource) ContextProvider.getBean("datasource");
-			logger.info("Initialized bean url :"+datasource1.getUrl());
-			logger.info("Initialized bean username :"+datasource1.getUsername());
+			ContextProvider.printAllBeansLoaded();
+			
+			DriverManagerDataSource datasource1 = ContextProvider.getBean(DriverManagerDataSource.class) ;
+			if(datasource1!=null){
+				logger.info("Initialized bean url :"+datasource1.getUrl());
+				logger.info("Initialized bean username :"+datasource1.getUsername());
+				
+			}
 			
 			metadata = datasource.getConnection().getMetaData();
 			url = metadata.getURL();

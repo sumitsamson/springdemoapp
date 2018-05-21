@@ -3,6 +3,8 @@
  */
 package com.spring.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -12,6 +14,8 @@ import org.springframework.context.ApplicationContextAware;
  *
  */
 public class ContextProvider implements ApplicationContextAware {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ContextProvider.class);
 
 	private static ApplicationContext CONTEXT;
 
@@ -20,6 +24,18 @@ public class ContextProvider implements ApplicationContextAware {
 		// TODO Auto-generated method stub
 		CONTEXT = context;
 
+	}
+	
+	
+	public static void printAllBeansLoaded(){
+		 String[] beanNames = CONTEXT.getBeanDefinitionNames();
+
+	        for (String beanName : beanNames) {
+
+	        	logger.info(beanName + " : " + CONTEXT.getBean(beanName).getClass().toString());
+	        	
+	        }
+		
 	}
 
 	/**
