@@ -29,13 +29,13 @@ public class ContextProvider implements ApplicationContextAware {
 	
 	public static void printAllBeansLoaded(){
 		 String[] beanNames = CONTEXT.getBeanDefinitionNames();
-
+		    logger.info("*******************************************************");
 	        for (String beanName : beanNames) {
 
-	        	logger.info(beanName + " : " + CONTEXT.getBean(beanName).getClass().toString());
+	        	logger.info("** "+beanName + " : " + CONTEXT.getBean(beanName).getClass().toString() + "  **");
 	        	
 	        }
-		
+	        logger.info("*******************************************************");
 	}
 
 	/**

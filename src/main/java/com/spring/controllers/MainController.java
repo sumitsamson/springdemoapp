@@ -74,6 +74,7 @@ public class MainController {
 		} catch (Exception e) {
 
 			logger.error("ERROR occured :" + e);
+			e.printStackTrace();
 			exception = e.getMessage();
 		}
 

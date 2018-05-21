@@ -29,8 +29,8 @@
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 		<property name="searchSystemEnvironment" value="true" />
 	</bean>
-
-	<!-- <bean id="userService" class="com.spring.service.UserServiceImpl" />
+    <bean id="applicationContextProvider" class="com.spring.controllers.ContextProvider" />
+	<!-- 
 	<bean id="userDao" class="com.spring.dao.UserDaoImpl" />
  -->
 	<bean id="datasource"
