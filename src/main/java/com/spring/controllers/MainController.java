@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.DatabaseMetaData;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
+
+import com.spring.model.Employee;
+import com.spring.service.EmployeeService;
 
 @Controller
 public class MainController {
@@ -36,7 +41,19 @@ public class MainController {
 
 	@Autowired
 	DataSource datasource;
+	
+	
+	@Autowired
+	EmployeeService employeeService;
+	
+	
+	@RequestMapping(value = "/saveorupdate", method = RequestMethod.GET)
+	public String saveOrUpdate(ModelMap model) {
 
+		return REDIRECT_HOME_PAGE;
+	}
+	
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String viewHomeDefault(ModelMap model) {
 
@@ -59,7 +76,7 @@ public class MainController {
 
 			isHostReachable(database_service_name);		
 			
-			ContextProvider.printAllBeansLoaded();
+			//ContextProvider.printAllBeansLoaded();
 			
 			DriverManagerDataSource datasource1 = ContextProvider.getBean(DriverManagerDataSource.class) ;
 			if(datasource1!=null){
@@ -70,6 +87,12 @@ public class MainController {
 			
 			metadata = datasource.getConnection().getMetaData();
 			url = metadata.getURL();
+			
+			
+			//Sample CRUD operations 
+			
+			 List<Employee> listEmployees = employeeService.list();
+			 model.addAttribute("listEmployees", listEmployees);
 
 		} catch (Exception e) {
 
@@ -82,11 +105,31 @@ public class MainController {
 		model.addAttribute("db_exception", exception);
 		model.addAttribute("message", "");
 		model.addAttribute("hostname", getHostname());
+		model.addAttribute("employee", new Employee());
 
 		logger.info(String.format("At home [%d]", ++counter));
 
 		return HOME_PAGE;
 	}
+	
+	
+	@RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
+	public String saveContact(@ModelAttribute Employee employee) {
+		logger.info("******* Save or Update called ********** ");
+		logger.info(String.format("Employee : %s ,Designation: %s", employee.getEmpName(),employee.getDesignation()));
+		employeeService.saveOrUpdate(employee);
+	    return REDIRECT_HOME_PAGE;
+	}
+	
+	
+	@RequestMapping(value = "/deleteEmployee", method = RequestMethod.GET)
+	public String deleteContact(HttpServletRequest request) {
+		logger.info("******* Delete called ********** ");
+	    int contactId = Integer.parseInt(request.getParameter("id"));
+	    employeeService.delete(contactId);
+	    return REDIRECT_HOME_PAGE;
+	}
+	
 
 	@RequestMapping(value = "/ping", method = RequestMethod.POST, produces = { "application/json" })
 	public @ResponseBody String pingHostname(@RequestParam(value = "hostname", required = true) String hostname)

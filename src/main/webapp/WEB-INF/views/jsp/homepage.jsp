@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,9 +60,8 @@
 			<button type="button" class="btn btn-info">${hostname}</button>
 		</h4>
 	</div>
-	<div class="alert alert-info alert-dismissible" id="ping_response" style="display: none">
-			
-	</div>
+	<div class="alert alert-info alert-dismissible" id="ping_response"
+		style="display: none"></div>
 	<c:choose>
 		<c:when test="${not empty db_exception}">
 			<div class="alert alert-danger">
@@ -74,6 +76,82 @@
 		</c:otherwise>
 	</c:choose> </main>
 	<!-- /.container -->
+
+	<!-- Employee List -->
+
+	<div align="center">
+		<h3>Employee List</h3>
+		<h4>
+			<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
+				data-target="#saveUpdateEmpModal">New Employee</button>
+		</h4>
+		<table class="table table-striped">
+		   <thead>
+              <tr>
+			    <th>No</th>
+			    <th>Employee ID</th>
+			    <th>Name</th>
+			    <th>Designation</th>
+			    <th>Action</th>
+			    </tr>
+			   </thead> 
+              <tbody>
+			     <c:forEach var="employee" items="${listEmployees}" varStatus="status">
+				   <tr>
+					<td>${status.index + 1}</td>
+					<td>${employee.empId}</td>
+					<td>${employee.empName}</td>
+					<td>${employee.designation}</td>
+					<td><a href="saveOrUpdate?id=${Employee.empId}">Edit</a>
+						&nbsp;&nbsp;&nbsp;&nbsp; <a
+						href="deleteEmployee?id=${Employee.empId}">Delete</a></td>
+
+				</tr>
+			</c:forEach>
+			</tbody>
+		</table>
+	</div>
+
+
+	<!-- Employee List end -->
+
+	<!-- Modal -->
+	<div id="saveUpdateEmpModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Save or Update Employee</h4>
+				</div>
+				<div class="modal-body">
+					<form:form id="employeeDetails" class="needs-validation"
+						method="post" modelAttribute="employee" action="saveOrUpdate">
+						<table>
+							<tr>
+								<td>Employee Name</td>
+								<td><form:input path="empName" /></td>
+							</tr>
+							<tr>
+								<td>Designation</td>
+								<td><form:input path="designation" /></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="center">
+								<input type="submit" value="Save"></td>
+							</tr>
+
+						</table>
+
+					</form:form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
 
 	<!-- Bootstrap core JavaScript
     ================================================== -->
