@@ -35,7 +35,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			createTable.append("empName VARCHAR(100) NOT NULL,");
 			createTable.append("designation VARCHAR(40) NOT NULL,");
 			createTable.append("PRIMARY KEY(empId))");
-			createTable.append("designation VARCHAR(40) NOT NULL,");
+			
 			
 			StringBuffer records = new StringBuffer();
 			records.append("INSERT INTO employee (empName, designation) VALUES ('Jones','Developer')");
@@ -45,8 +45,15 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			jdbcTemplate.execute(createTable.toString());
 			jdbcTemplate.execute(records.toString());
 			
+			logger.info("************************************");
+			logger.info("*********** DUMMY DATA ADDED  ******");
+			logger.info("************************************");
+			
 		}catch(Exception e){
 			logger.error("Error occured while creating table employee and dummy data",e);
+			logger.info("**********************************************************");
+			logger.info("*********** ERROR OCCURED WHILE CREATING DUMMY DATA ******");
+			logger.info("**********************************************************");
 			
 		}
 	}
