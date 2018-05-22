@@ -51,66 +51,66 @@
 		</div>
 	</nav>
 
-	<main role="main" class="container">
-
-	<div class="starter-template">
+	<main role="main">
+	<div class="jumbotron">
 		<h1>Spring Demo Web App</h1>
-		<h4>
-			Host Details :
+		<p>This is a sample application build using Spring MVC + Maven +
+			Mysql.</p>
+		<p>
+			<strong>Host Details :</strong>
 			<button type="button" class="btn btn-info">${hostname}</button>
-		</h4>
+		</p>
+		<p>
+			<strong> Database Connection Details :</strong>
+			<c:choose>
+				<c:when test="${not empty db_exception}">
+					<div class="alert alert-danger">${db_exception}</div>
+				</c:when>
+				<c:otherwise>
+					<div class="alert alert-info">${db_url}</div>
+				</c:otherwise>
+			</c:choose>
+		</p>
 	</div>
 	<div class="alert alert-info alert-dismissible" id="ping_response"
 		style="display: none"></div>
-	<c:choose>
-		<c:when test="${not empty db_exception}">
-			<div class="alert alert-danger">
-				<strong>DB not configured </strong> <br> <strong>Error
-					:</strong>${db_exception}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8">
+				<h4>Employee List</h4>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>No</th>
+							<th>Employee ID</th>
+							<th>Name</th>
+							<th>Designation</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="employee" items="${listEmployees}"
+							varStatus="status">
+							<tr>
+								<td>${status.index + 1}</td>
+								<td>${employee.empId}</td>
+								<td>${employee.empName}</td>
+								<td>${employee.designation}</td>
+								<td><a href="deleteEmployee/${employee.empId}">Delete</a></td>
+
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
 			</div>
-		</c:when>
-		<c:otherwise>
-			<div class="alert alert-info">
-				<strong>DB info :</strong>${db_url}
+			<div class="col-md-4">
+				<button type="button" class="btn btn-info btn-lg"
+					data-toggle="modal" data-target="#saveUpdateEmpModal">New
+					Employee</button>
 			</div>
-		</c:otherwise>
-	</c:choose> </main>
-	<!-- /.container -->
-
-	<!-- Employee List -->
-
-	<div align="center">
-		<h3>Employee List</h3>
-		<h4>
-			<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
-				data-target="#saveUpdateEmpModal">New Employee</button>
-		</h4>
-		<table class="table table-striped">
-		   <thead>
-              <tr>
-			    <th>No</th>
-			    <th>Employee ID</th>
-			    <th>Name</th>
-			    <th>Designation</th>
-			    <th>Action</th>
-			    </tr>
-			   </thead> 
-              <tbody>
-			     <c:forEach var="employee" items="${listEmployees}" varStatus="status">
-				   <tr>
-					<td>${status.index + 1}</td>
-					<td>${employee.empId}</td>
-					<td>${employee.empName}</td>
-					<td>${employee.designation}</td>
-					<td><a href="deleteEmployee/${employee.empId}">Delete</a></td>
-
-				</tr>
-			</c:forEach>
-			</tbody>
-		</table>
+		</div>
 	</div>
-
-
+	</main>
 	<!-- Employee List end -->
 
 	<!-- Modal -->
@@ -135,8 +135,8 @@
 								<td><form:input path="designation" /></td>
 							</tr>
 							<tr>
-								<td colspan="2" align="center">
-								<input type="submit" value="Save"></td>
+								<td colspan="2" align="center"><input type="submit"
+									value="Save" class="btn btn-primary" ></td>
 							</tr>
 
 						</table>
@@ -144,7 +144,7 @@
 					</form:form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 
@@ -165,38 +165,43 @@
 		src="<c:url value="/static/js2/holder.min.js" />"></script>
 	<script type="text/javascript">
 		<c:url var="pinghost" value="/ping"/>
-		$(document).ready(function() {
+		$(document).ready(
+				function() {
 
-			$("#btn_ping").click(function(e) {
-				e.preventDefault();
-				var hostname = $("#host_name").val();
-				var html = 'Waitng Response from host '+hostname +' ....'
-			    $('#ping_response').html(html);
-					
-				$("#ping_response").show();
+					$("#btn_ping").click(
+							function(e) {
+								e.preventDefault();
+								var hostname = $("#host_name").val();
+								var html = 'Waitng Response from host '
+										+ hostname + ' ....'
+								$('#ping_response').html(html);
 
-				$.ajax({
-					url : "${pinghost}",
-					type : "POST",
-					data : {
-						hostname : hostname
-					},
-					dataType : 'text',
-					success : function(data) {
-						    html = ''
-							html += '<strong>Ping Response from '+hostname +' : </strong> ';
-							html += data;
-							$('#ping_response').html(html);
+								$("#ping_response").show();
 
-					},
-					error : function(jqXHR, textStatus) {
-						console.log("Request failed: " + textStatus);
+								$.ajax({
+									url : "${pinghost}",
+									type : "POST",
+									data : {
+										hostname : hostname
+									},
+									dataType : 'text',
+									success : function(data) {
+										html = ''
+										html += '<strong>Ping Response from '
+												+ hostname + ' : </strong> ';
+										html += data;
+										$('#ping_response').html(html);
 
-					}
+									},
+									error : function(jqXHR, textStatus) {
+										console.log("Request failed: "
+												+ textStatus);
+
+									}
+								});
+
+							});
 				});
-
-			});
-		});
 	</script>
 </body>
 </html>
