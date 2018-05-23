@@ -55,31 +55,39 @@
 	<div class="jumbotron">
 		<h1>Spring Demo Web App</h1>
 		<p>This is a sample application build using Spring MVC + Maven +
-			Mysql.</p>
-
-		<table class="table">
-			<tbody>
-				<tr>
-					<th>Host Details</th>
-					<td class="alert alert-info">${hostname}</td>
-				</tr>
-				<tr>
-					<th>Database Connection Details</th>
-					<c:choose>
-							<c:when test="${not empty db_exception}">
-								<td class="alert alert-danger">${db_exception}</<td>>
-							</c:when>
-							<c:otherwise>
-								<td class="alert alert-info">${db_url}</td>>
+			Mysql</p>
+		<div class="row">
+			<div class="col-md-8">
+				<table class="table">
+					<tbody>
+						<tr>
+							<th>Host Details</th>
+							<td class="alert alert-info">${hostname}</td>
+						</tr>
+						<tr>
+							<th>Database Connection Details</th>
+							<c:choose>
+								<c:when test="${not empty db_exception}">
+									<td class="alert alert-danger">${db_exception}</
+									<td>>
+								</c:when>
+								<c:otherwise>
+									<td class="alert alert-info">${db_url}</td>>
 							</c:otherwise>
-						</c:choose>
-					
-				</tr>
-			</tbody>
-		</table>		
+							</c:choose>
+
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-4">
+				<div class="alert alert-info alert-dismissible" id="ping_response"
+					style="display: none"></div>
+			</div>
+		</div>
+
 	</div>
-	<div class="alert alert-info alert-dismissible" id="ping_response"
-		style="display: none"></div>
+
 	<div class="container">
 		<div class="row">
 			<div class="col-md-8">
@@ -110,9 +118,8 @@
 				</table>
 			</div>
 			<div class="col-md-4">
-				<button type="button" class="btn btn-info"
-					data-toggle="modal" data-target="#saveUpdateEmpModal">Add New
-					Employee</button>
+				<button type="button" class="btn btn-info" data-toggle="modal"
+					data-target="#saveUpdateEmpModal">Add New Employee</button>
 			</div>
 		</div>
 	</div>
