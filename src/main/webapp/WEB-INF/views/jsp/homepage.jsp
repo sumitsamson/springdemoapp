@@ -231,11 +231,12 @@
 		src="<c:url value="/static/js2/holder.min.js" />"></script>
 	<script type="text/javascript">
 		<c:url var="pinghost" value="/ping"/>
-		var employeeList = ${listEmployees};
+		
 
 		$(document).ready(
 				function() {
-
+                      
+					var employeeList = ${listEmployees};
 					$("#btn_ping").click(
 							function(e) {
 								e.preventDefault();
