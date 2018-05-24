@@ -110,7 +110,15 @@
 								<td>${employee.empId}</td>
 								<td>${employee.empName}</td>
 								<td>${employee.designation}</td>
-								<td><a href="deleteEmployee/${employee.empId}">Delete</a></td>
+								<td>
+									<button id="editEmpBtn" type="button" class="btn btn-info emp"
+										data-toggle="modal" data-target="#editdeleteEmpModal"
+										data-value="edit-${employee.empId}">Edit</button>
+									<button id="deleteEmpBtn" type="button"
+										class="btn btn-warning emp" data-toggle="modal"
+										data-target="#editdeleteEmpModal"
+										data-value="del-${employee.empId}">Delete</button>
+								</td>
 
 							</tr>
 						</c:forEach>
@@ -119,21 +127,21 @@
 			</div>
 			<div class="col-md-4">
 				<button type="button" class="btn btn-info" data-toggle="modal"
-					data-target="#saveUpdateEmpModal">Add New Employee</button>
+					data-target="#saveEmpModal">Add New Employee</button>
 			</div>
 		</div>
 	</div>
 	</main>
 	<!-- Employee List end -->
 
-	<!-- Modal -->
-	<div id="saveUpdateEmpModal" class="modal fade" role="dialog">
+	<!-- Add new employee Modal -->
+	<div id="saveEmpModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 
 			<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Save or Update Employee</h4>
+					<h4 class="modal-title">Save Employee</h4>
 				</div>
 				<div class="modal-body">
 					<form:form id="employeeDetails" class="needs-validation"
@@ -164,6 +172,51 @@
 		</div>
 	</div>
 
+	<!-- Edit/Delete Employee Modal -->
+
+	<div id="editdeleteEmpModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 id="modal_title" class="modal-title">Edit Employee</h4>
+				</div>
+				<div class="modal-body">
+					<form:form id="employeeDetails2" method="post"
+						modelAttribute="employee" action="">
+						<table>
+							<tr>
+								<td>Employee Name</td>
+								<td><form:input path="empName" id="empName" />
+								 <form:hidden path="empId" id="empId"/>								
+								</td>
+							</tr>
+							<tr>
+								<td>Designation</td>
+								<td><form:input path="designation" id="designation" /></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="center"><input type="submit"
+									id="editdeleteBtn" value="Edit" class="btn btn-primary"></td>
+							</tr>
+
+						</table>
+
+					</form:form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+	<!-- Edit/Delete Employee Modal ends -->
+
 	<!-- Bootstrap core JavaScript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
@@ -178,6 +231,8 @@
 		src="<c:url value="/static/js2/holder.min.js" />"></script>
 	<script type="text/javascript">
 		<c:url var="pinghost" value="/ping"/>
+		var employeeList = ${listEmployees};
+
 		$(document).ready(
 				function() {
 
@@ -214,6 +269,42 @@
 								});
 
 							});
+
+					$('.emp').on('click', function(e) {
+						var dataVal = $(this).data("value").split("-");
+						var operation = dataVal[0];
+						var id = dataVal[1];
+						alert("Your values are :" + id + " " + operation);
+						var name = '';
+						var designation = '';
+						var employeeId = -1;
+						$.each(employeeList, function(index, value) {
+							 employeeId = value.empId;
+							if (id == employeeId) {
+								name = value.empName;
+								designation = value.designation;
+								break;
+							}
+
+						});
+						
+						$('#empName').val(name);
+						$('#designation').val(designation);
+						$('#empId').val(employeeId);
+
+						if ("edit" == operation) {
+
+						} else if ("del" == operation) {
+							$("#modal_title").text("Delete Employee ");
+							$("#editdeleteBtn").text("Delete");
+							$("#editdeleteBtn").removeClass("btn-primary");
+							$("#editdeleteBtn").addClass("btn-error");
+							$("#employeeDetails2").attr('action', 'deleteEmployee');							
+						} else {
+							alert("Something went wrong..");
+						}
+
+					});
 				});
 	</script>
 </body>

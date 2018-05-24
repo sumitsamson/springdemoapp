@@ -18,7 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -123,13 +122,22 @@ public class MainController {
 	}
 	
 	
-	@RequestMapping(value = "/deleteEmployee/{empId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/deleteEmployee", method = RequestMethod.GET)
+	public String deleteEmployee(@ModelAttribute Employee employee) {
+		logger.info("******* Delete called ********** ");
+		logger.info(String.format("Employee[%s] : %s ,Designation: %s ",employee.getEmpId(), employee.getEmpName(),employee.getDesignation()));
+	    employeeService.delete(employee.getEmpId());
+	    return REDIRECT_HOME_PAGE;
+	}
+	
+	
+	/*@RequestMapping(value = "/deleteEmployee/{empId}", method = RequestMethod.GET)
 	public String deleteEmployee(@PathVariable int empId) {
 		logger.info("******* Delete called ********** ");
 	    employeeService.delete(empId);
 	    return REDIRECT_HOME_PAGE;
 	}
-	
+	*/
 
 	
 
