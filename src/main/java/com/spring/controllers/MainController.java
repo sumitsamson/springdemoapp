@@ -131,7 +131,7 @@ public class MainController {
 		return REDIRECT_HOME_PAGE;
 	}
 
-	@RequestMapping(value = "/deleteEmployee", method = RequestMethod.GET)
+	@RequestMapping(value = "/deleteEmployee", method = RequestMethod.POST)
 	public String deleteEmployee(@ModelAttribute Employee employee) {
 		logger.info("******* Delete called ********** ");
 		logger.info(String.format("Employee[%s] : %s ,Designation: %s ", employee.getEmpId(), employee.getEmpName(),
