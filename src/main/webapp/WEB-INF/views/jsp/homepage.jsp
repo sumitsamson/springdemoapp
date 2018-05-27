@@ -111,10 +111,10 @@
 								<td>${employee.empName}</td>
 								<td>${employee.designation}</td>
 								<td>
-									<button id="editEmpBtn" type="button" class="btn btn-info btn-xs emp"
+									<button id="editEmpBtn" type="button" class="btn btn-primary btn-sm emp"
 										data-toggle="modal" data-target="#editdeleteEmpModal"
 										data-value="edit" data-id="${employee.empId}" >Edit</button>
-									<button id="deleteEmpBtn" type="button" class="btn btn-danger btn-xs emp"
+									<button id="deleteEmpBtn" type="button" class="btn btn-danger btn-sm emp"
 										data-toggle="modal" data-target="#editdeleteEmpModal"
 										data-value="del" data-id="${employee.empId}" >Delete</button>
 								</td>
