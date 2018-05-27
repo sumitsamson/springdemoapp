@@ -68,11 +68,10 @@
 							<th>Database Connection Details</th>
 							<c:choose>
 								<c:when test="${not empty db_exception}">
-									<td class="alert alert-danger">${db_exception}</
-									<td>
+									<td class="alert alert-danger">${db_exception}<td>
 								</c:when>
 								<c:otherwise>
-									<td class="alert alert-info">${db_url}</td>>
+									<td class="alert alert-info">${db_url}</td>
 							</c:otherwise>
 							</c:choose>
 
