@@ -5,6 +5,14 @@ public class Employee {
 	private String empName;
 	private int empId;
 	private String designation;
+	
+	public Employee(){}
+	
+	public Employee(int empId,String empName,String designation){
+		this.empId = empId;
+		this.empName = empName;
+		this.designation = designation;
+	}
 
 	public String getEmpName() {
 		return empName;

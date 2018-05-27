@@ -111,13 +111,12 @@
 								<td>${employee.empName}</td>
 								<td>${employee.designation}</td>
 								<td>
-									<button id="editEmpBtn" type="button" class="btn btn-info emp"
+									<button id="editEmpBtn" type="button" class="btn btn-info btn-xs emp"
 										data-toggle="modal" data-target="#editdeleteEmpModal"
-										data-value="edit-${employee.empId}">Edit</button>
-									<button id="deleteEmpBtn" type="button"
-										class="btn btn-warning emp" data-toggle="modal"
-										data-target="#editdeleteEmpModal"
-										data-value="del-${employee.empId}">Delete</button>
+										data-value="edit" data-id="${employee.empId}" >Edit</button>
+									<button id="deleteEmpBtn" type="button" class="btn btn-danger btn-xs emp"
+										data-toggle="modal" data-target="#editdeleteEmpModal"
+										data-value="del" data-id="${employee.empId}" >Delete</button>
 								</td>
 
 							</tr>
@@ -126,7 +125,7 @@
 				</table>
 			</div>
 			<div class="col-md-4">
-				<button type="button" class="btn btn-info" data-toggle="modal"
+				<button type="button" class="btn btn-success" data-toggle="modal"
 					data-target="#saveEmpModal">Add New Employee</button>
 			</div>
 		</div>
@@ -188,13 +187,13 @@
 						<table>
 							<tr>
 								<td>Employee Name</td>
-								<td><form:input path="empName" id="empName" />
-								 <form:hidden path="empId" id="empId"/>								
+								<td><form:input path="empName" name="empName" />
+								 <form:hidden path="empId" name="empId"/>								
 								</td>
 							</tr>
 							<tr>
 								<td>Designation</td>
-								<td><form:input path="designation" id="designation" /></td>
+								<td><form:input path="designation" name="designation" /></td>
 							</tr>
 							<tr>
 								<td colspan="2" align="center"><input type="submit"
@@ -236,7 +235,7 @@
 		$(document).ready(
 				function() {
                       
-					var employeeList = ${listEmployees};
+					var employeeList = JSON.parse('${listEditDelete}');
 					$("#btn_ping").click(
 							function(e) {
 								e.preventDefault();
@@ -272,40 +271,48 @@
 							});
 
 					$('.emp').on('click', function(e) {
-						var dataVal = $(this).data("value").split("-");
-						var operation = dataVal[0];
-						var id = dataVal[1];
-						alert("Your values are :" + id + " " + operation);
-						var name = '';
-						var designation = '';
-						var employeeId = -1;
-						$.each(employeeList, function(index, value) {
-							 employeeId = value.empId;
-							if (id == employeeId) {
-								name = value.empName;
-								designation = value.designation;
-								break;
-							}
-
-						});
-						
-						$('#empName').val(name);
-						$('#designation').val(designation);
-						$('#empId').val(employeeId);
-
-						if ("edit" == operation) {
+						 // Get the record's ID via attribute
+						  var id = $(this).attr('data-id');		
+						  var operation = $(this).attr('data-value');
+										
+						  var name = '';
+						  var designation = '';
+						  var employeeId = -1;
+						  $.each(employeeList, function(index, value) {
+								 employeeId = value.empId;
+							    	if (id == employeeId) {
+										name = value.empName;
+										designation = value.designation;
+										return true;
+										}
+							});
+													
+		   				// alert("Your values are :" + id + " " + operation +" "+name+" "+designation);
+						 $('#employeeDetails2')
+						  .find('[name="empId"]').val(employeeId).end()
+						  .find('[name="empName"]').val(name).end()
+						  .find('[name="designation"]').val(designation).end();
+						  
+					if ("edit" == operation) {
+												
+							$("#modal_title").text("Edit Employee ");
+							$("#editdeleteBtn").val("Edit");
+							$("#editdeleteBtn").addClass("btn-primary");
+							$("#editdeleteBtn").removeClass("btn-danger");
+							$("#employeeDetails2").attr('action', 'saveOrUpdate');
 
 						} else if ("del" == operation) {
+							
 							$("#modal_title").text("Delete Employee ");
-							$("#editdeleteBtn").text("Delete");
+							$("#editdeleteBtn").val("Delete");
 							$("#editdeleteBtn").removeClass("btn-primary");
-							$("#editdeleteBtn").addClass("btn-error");
+							$("#editdeleteBtn").addClass("btn-danger");
 							$("#employeeDetails2").attr('action', 'deleteEmployee');							
 						} else {
 							alert("Something went wrong..");
-						}
-
-					});
+						}	  
+						  
+					})
 				});
 	</script>
 </body>

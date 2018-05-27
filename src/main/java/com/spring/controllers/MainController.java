@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.DatabaseMetaData;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.google.gson.Gson;
 import com.spring.model.Employee;
 import com.spring.service.EmployeeService;
 
@@ -41,19 +43,16 @@ public class MainController {
 
 	@Autowired
 	DataSource datasource;
-	
-	
+
 	@Autowired
 	EmployeeService employeeService;
-	
-	
+
 	@RequestMapping(value = "/saveorupdate", method = RequestMethod.GET)
 	public String saveOrUpdate(ModelMap model) {
 
 		return REDIRECT_HOME_PAGE;
 	}
-	
-	
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String viewHomeDefault(ModelMap model) {
 
@@ -67,40 +66,51 @@ public class MainController {
 		String url = "";
 		String exception = "";
 		String database_service_name = "";
+		List<Employee> listEmployees = new ArrayList<Employee>();
 
-		try {	
-			
-			
+		try {
+
 			database_service_name = System.getenv("DATABASE_SERVICE_NAME");
 			logger.info("Database service :: " + database_service_name);
 
-			isHostReachable(database_service_name);		
-			
-			//ContextProvider.printAllBeansLoaded();
-			
-			DriverManagerDataSource datasource1 = ContextProvider.getBean(DriverManagerDataSource.class) ;
-			if(datasource1!=null){
-				logger.info("Initialized bean url :"+datasource1.getUrl());
-				logger.info("Initialized bean username :"+datasource1.getUsername());
-				
+			isHostReachable(database_service_name);
+
+			// ContextProvider.printAllBeansLoaded();
+
+			DriverManagerDataSource datasource1 = ContextProvider.getBean(DriverManagerDataSource.class);
+			if (datasource1 != null) {
+				logger.info("Initialized bean url :" + datasource1.getUrl());
+				logger.info("Initialized bean username :" + datasource1.getUsername());
+
 			}
-			
+
 			metadata = datasource.getConnection().getMetaData();
 			url = metadata.getURL();
-			
-			
-			//Sample CRUD operations 
-			
-			 List<Employee> listEmployees = employeeService.list();
-			 model.addAttribute("listEmployees", listEmployees);
+
+			// Sample CRUD operations
+
+			listEmployees = employeeService.list();
 
 		} catch (Exception e) {
 
 			logger.error("ERROR occured :" + e);
 			e.printStackTrace();
 			exception = e.getMessage();
+			if (listEmployees.size() < 1) {
+				logger.info("********adding dummy employee list ********");
+				Employee e1 = new Employee(100, "Ramu", "Cleaner");
+				Employee e2 = new Employee(200, "Shamu", "Janitor");
+				listEmployees.add(e1);
+				listEmployees.add(e2);
+
+			}
+
 		}
 
+		Gson gson = new Gson();
+
+		model.addAttribute("listEmployees", listEmployees);
+		model.addAttribute("listEditDelete", gson.toJson(listEmployees));
 		model.addAttribute("db_url", url);
 		model.addAttribute("db_exception", exception);
 		model.addAttribute("message", "");
@@ -111,35 +121,31 @@ public class MainController {
 
 		return HOME_PAGE;
 	}
-	
-	
+
 	@RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
 	public String saveUpdateEmployee(@ModelAttribute Employee employee) {
 		logger.info("******* Save or Update called ********** ");
-		logger.info(String.format("Employee : %s ,Designation: %s", employee.getEmpName(),employee.getDesignation()));
+		logger.info(String.format("Employee[%s] : %s ,Designation: %s ", employee.getEmpId(), employee.getEmpName(),
+				employee.getDesignation()));
 		employeeService.saveOrUpdate(employee);
-	    return REDIRECT_HOME_PAGE;
+		return REDIRECT_HOME_PAGE;
 	}
-	
-	
+
 	@RequestMapping(value = "/deleteEmployee", method = RequestMethod.GET)
 	public String deleteEmployee(@ModelAttribute Employee employee) {
 		logger.info("******* Delete called ********** ");
-		logger.info(String.format("Employee[%s] : %s ,Designation: %s ",employee.getEmpId(), employee.getEmpName(),employee.getDesignation()));
-	    employeeService.delete(employee.getEmpId());
-	    return REDIRECT_HOME_PAGE;
+		logger.info(String.format("Employee[%s] : %s ,Designation: %s ", employee.getEmpId(), employee.getEmpName(),
+				employee.getDesignation()));
+		employeeService.delete(employee.getEmpId());
+		return REDIRECT_HOME_PAGE;
 	}
-	
-	
-	/*@RequestMapping(value = "/deleteEmployee/{empId}", method = RequestMethod.GET)
-	public String deleteEmployee(@PathVariable int empId) {
-		logger.info("******* Delete called ********** ");
-	    employeeService.delete(empId);
-	    return REDIRECT_HOME_PAGE;
-	}
-	*/
 
-	
+	/*
+	 * @RequestMapping(value = "/deleteEmployee/{empId}", method =
+	 * RequestMethod.GET) public String deleteEmployee(@PathVariable int empId)
+	 * { logger.info("******* Delete called ********** ");
+	 * employeeService.delete(empId); return REDIRECT_HOME_PAGE; }
+	 */
 
 	@RequestMapping(value = "/ping", method = RequestMethod.POST, produces = { "application/json" })
 	public @ResponseBody String pingHostname(@RequestParam(value = "hostname", required = true) String hostname)
@@ -174,7 +180,7 @@ public class MainController {
 		try {
 			ip = InetAddress.getLocalHost();
 			hostname = ip.toString();
-			logger.info("HOSTNAME :"+hostname);
+			logger.info("HOSTNAME :" + hostname);
 
 		} catch (UnknownHostException e) {
 
@@ -194,7 +200,7 @@ public class MainController {
 				if (geek.isReachable(5000)) {
 					logger.info("Host :" + ipAddress + " is reachable");
 					reachable = true;
-				}else{
+				} else {
 					logger.error("Host :" + ipAddress + " not reachable");
 				}
 			} catch (IOException e) {
